@@ -311,7 +311,6 @@ PNode ReverseList(PNode phead)
 
 	p = phead;
 	q = r = NULL;
-
 	while (p)
 	{
 		q = p->next;
@@ -320,6 +319,38 @@ PNode ReverseList(PNode phead)
 		p = q;
 	}
 	return r;
+}
+
+
+PNode search(PNode Head, int k)
+{
+
+	int length = 0;
+	PNode p = Head;
+	while (p != NULL)
+	{
+		length++;
+		p = p->next;
+	}
+	if (Head == NULL || k == 0 || k > length)
+	{
+		return NULL;
+	}
+
+	PNode p1 = Head;
+	PNode p2 = Head;
+
+	for (int i = 0; i<k - 1; i++)
+	{
+		p1 = p1->next;
+	}
+
+	while (p1->next != NULL)
+	{
+		p1 = p1->next;
+		p2 = p2->next;
+	}
+	return p2;
 }
 int main()
 {
