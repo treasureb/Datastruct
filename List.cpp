@@ -304,6 +304,23 @@ void Sort(PNode l1, PNode l2)
 	if (p2)
 		p1->next = p2;
 }
+
+PNode ReverseList(PNode phead)
+{
+	PNode p, q, r;
+
+	p = phead;
+	q = r = NULL;
+
+	while (p)
+	{
+		q = p->next;
+		p->next = r;
+		r = p;
+		p = q;
+	}
+	return r;
+}
 int main()
 {
 
