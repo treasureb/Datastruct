@@ -322,7 +322,7 @@ PNode ReverseList(PNode phead)
 }
 
 
-PNode search(PNode Head, int k)
+PNode Search(PNode Head, int k)
 {
 
 	int length = 0;
@@ -352,6 +352,75 @@ PNode search(PNode Head, int k)
 	}
 	return p2;
 }
+
+bool IsExitsLoop(PNode Head)
+{
+	PNode Fast = Head;
+	PNode Slow = Head;
+	while (Fast && Fast->next)
+	{
+		Slow = Slow->next;
+		Fast = Fast->next->next;
+		if (Fast == Slow)
+			return true;
+	}
+
+	if (Fast == NULL || Fast->next == NULL)
+		return false;
+
+}
+
+ PNode FindLoopPort(PNode Head)
+{
+	PNode Slow = Head, Fast = Head;
+
+	while (Fast && Fast->next)
+	{
+		Slow = Slow->next;
+		Fast = Fast->next->next;
+		if (Slow == Fast) break;
+	}
+
+	if (Fast == NULL || Fast->next == NULL)
+		return NULL;
+
+	Slow = Head;
+	while (Slow != Fast)
+	{
+		Slow = Slow->next;
+		Fast = Fast->next;
+	}
+
+	return Slow;
+}
+
+ unsigned int GetLoopLength(PNode Head)
+ {
+	 PNode Slow = Head, Fast = Head;
+
+	 while (Fast && Fast->next)
+	 {
+		 Slow = Slow->next;
+		 Fast = Fast->next->next;
+		 if (Slow == Fast) break;
+	 }
+
+	 if (Fast == NULL || Fast->next == NULL)
+		 return 0;
+
+	 PNode meet = Slow;
+	 Slow = meet->next;
+	 Fast = meet->next->next;
+	 unsigned int len = 1;
+	 while (Slow != Fast)
+	 {
+		 len++;
+		 Slow = Slow->next;
+		 Fast = Fast->next->next;
+	 }
+
+	 return len;
+ }
 int main()
 {
 
