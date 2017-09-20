@@ -1,6 +1,8 @@
 #include<stdio.h>
 #include<assert.h>
 #include<malloc.h>
+#include<stdlib.h>
+
 
 typedef int DataType;
 typedef struct Node
@@ -9,12 +11,14 @@ typedef struct Node
 	DataType data;
 }Node, *PNode;//这里定义一个结构体类型和一个结构体指针类型
 
-PNode BuyNode(DataType data);
+PNode BuyNode(DataType data);//声明
+
 //初始化单链表
 void InitList(PNode* pHead)
 {
 	*pHead = NULL;
 }
+
 //从尾部插入一个新的节点
 void Pushback(PNode* pHead, DataType data)
 {
@@ -33,6 +37,7 @@ void Pushback(PNode* pHead, DataType data)
 		pCur->next = NULL;
 	}
 }
+
 //从尾部删除一个节点
 void Popback(PNode *pHead)
 {
@@ -41,7 +46,7 @@ void Popback(PNode *pHead)
 	{
 		return;
 	}
-	else if (NULL == (*pHead)->next)
+	else if (NULL == (*pHead)->next)//只有一个头结点
 	{
 		free(*pHead);
 		*pHead = NULL;
@@ -49,7 +54,7 @@ void Popback(PNode *pHead)
 	else
 	{
 		PNode pCur = *pHead;
-		PNode pPre = pCur;
+		PNode pPre = pCur;//要删除该节点，必须保存其前一个节点
 
 		while (pCur)
 		{
@@ -62,6 +67,7 @@ void Popback(PNode *pHead)
 
 	}
 }
+
 //从头部插入一个新的节点
 void PushFront(PNode *pHead, DataType data)
 {
@@ -73,6 +79,7 @@ void PushFront(PNode *pHead, DataType data)
 		*pHead = pNewNode;
 	}
 }
+
 //从头部删除一个新的节点
 void PopFront(PNode *pHead)
 {
@@ -87,6 +94,7 @@ void PopFront(PNode *pHead)
 	*pHead = (*pHead)->next;
 	free(Del);
 }
+
 //查找值为data的节点
 PNode Find(PNode *pHead, DataType data)
 {
@@ -100,6 +108,7 @@ PNode Find(PNode *pHead, DataType data)
 	}
 	return NULL;
 }
+
 //在Pos位插入一个节点
 void Insert(PNode Pos, DataType data)
 {
@@ -114,6 +123,7 @@ void Insert(PNode Pos, DataType data)
 	pNewNode->next = Pos->next;
 	Pos->next = pNewNode;
 }
+
 //删除Pos位的节点
 void Erase(PNode *pHead, PNode Pos)
 {
@@ -136,6 +146,7 @@ void Erase(PNode *pHead, PNode Pos)
 		free(Pos);
 	}
 }
+
 //移除链表中第一个值为data的节点
 void Remove(PNode *pHead, DataType data)
 {
@@ -150,6 +161,7 @@ void Remove(PNode *pHead, DataType data)
 	pPreNode->next = pCurNode->next;
 	free(pCurNode);
 }
+
 //移除链表中所有值为data的节点
 void RemoveAll(PNode *pHead, DataType data)
 {
@@ -177,6 +189,7 @@ void RemoveAll(PNode *pHead, DataType data)
 		free(pCurNode);
 	}
 }
+
 //获取链表中节点的总个数
 size_t Size(PNode pHead)
 {
@@ -188,12 +201,18 @@ size_t Size(PNode pHead)
 	}
 	return count;
 }
+
 //获取链表中的第一个节点
 PNode Front(PNode pHead)
 {
+	if (NULL == pHead)
+	{
+		return NULL;
+	}
 	return pHead;
 
 }
+
 //获取链表中的最后一个节点
 PNode Back(PNode pHead)
 {
@@ -205,8 +224,9 @@ PNode Back(PNode pHead)
 	}
 	return pHead;
 }
+
 //链表判空
-int Empty(PNode pHead)
+bool Empty(PNode pHead)
 {
 	if (NULL == pHead)
 		return 1;
@@ -220,7 +240,7 @@ PNode BuyNode(DataType data)
 	PNode pTemp = (PNode)malloc(sizeof(Node));
 	if (NULL == pTemp)
 	{
-		printf("This is Empty!");
+		printf("malloc error!");
 	}
 	else
 	{
@@ -305,20 +325,24 @@ void Sort(PNode l1, PNode l2)
 		p1->next = p2;
 }
 
-PNode ReverseList(PNode phead)
+PNode ReverseList(PNode pHead)
 {
-	PNode p, q, r;
+	PNode pPre;
+	PNode pCur;
+	PNode Next;
 
-	p = phead;
-	q = r = NULL;
-	while (p)
+	pPre = pHead;
+	pCur = pHead->next;
+	Next = NULL;
+	while (pCur)
 	{
-		q = p->next;
-		p->next = r;
-		r = p;
-		p = q;
+		Next = pCur->next;
+		pCur->next = pPre;
+		pPre = pCur;
+		pCur = Next;
 	}
-	return r;
+	pHead->next = NULL;
+	pHead = pPre;//pPre即为最后的头结点 
 }
 
 
@@ -326,31 +350,31 @@ PNode Search(PNode Head, int k)
 {
 
 	int length = 0;
-	PNode p = Head;
-	while (p != NULL)
+	PNode pCur = Head;
+	while (pCur != NULL)
 	{
 		length++;
-		p = p->next;
+		pCur = pCur->next;
 	}
 	if (Head == NULL || k == 0 || k > length)
 	{
 		return NULL;
 	}
 
-	PNode p1 = Head;
-	PNode p2 = Head;
+	PNode Fast = Head;
+	PNode Slow = Head;
 
 	for (int i = 0; i<k - 1; i++)
 	{
-		p1 = p1->next;
+		Fast = Fast->next;
 	}
 
-	while (p1->next != NULL)
+	while (Fast->next != NULL)
 	{
-		p1 = p1->next;
-		p2 = p2->next;
+		Fast = Fast->next;
+		Slow = Slow->next;
 	}
-	return p2;
+	return Slow;
 }
 
 bool IsExitsLoop(PNode Head)
@@ -372,13 +396,14 @@ bool IsExitsLoop(PNode Head)
 
  PNode FindLoopPort(PNode Head)
 {
-	PNode Slow = Head, Fast = Head;
+	PNode Slow = Head;
+	PNode Fast = Head;
 
 	while (Fast && Fast->next)
 	{
 		Slow = Slow->next;
 		Fast = Fast->next->next;
-		if (Slow == Fast) break;
+		if (Slow == Fast) break;//找到相遇点
 	}
 
 	if (Fast == NULL || Fast->next == NULL)
@@ -420,6 +445,56 @@ bool IsExitsLoop(PNode Head)
 	 }
 
 	 return len;
+ }
+
+
+ PNode Find_Node(PNode Head1, PNode Head2)
+ {
+	 if (NULL == Head1 || NULL == Head2)
+	 {
+		 return NULL;//如果有为空的链表，肯定是不相交的  
+	 }
+	 PNode p1, p2;
+	 p1 = Head1;
+	 p2 = Head2;
+	 int len1 = 0;
+	 int len2 = 0;
+	 int diff = 0;
+	 while (NULL != p1->next)
+	 {
+		 p1 = p1->next;
+		 len1++;
+	 }
+	 while (NULL != p2->next)
+	 {
+		 p2 = p2->next;
+		 len2++;
+	 }
+	 if (p1 != p2) //如果最后一个节点不相同,返回NULL  
+	 {
+		 return NULL;
+	 }
+	 diff = abs(len1 - len2);
+	 if (len1 > len2)
+	 {
+		 p1 = Head1;
+		 p2 = Head2;
+	 }
+	 else
+	 {
+		 p1 = Head2;
+		 p2 = Head1;
+	 }
+	 for (int i = 0; i<diff; i++)
+	 {
+		 p1 = p1->next;
+	 }
+	 while (p1 != p2)
+	 {
+		 p1 = p1->next;
+		 p2 = p2->next;
+	 }
+	 return p1;
  }
 int main()
 {
