@@ -26,7 +26,7 @@ template<class T>
 struct _BinaryTreeIterator
 {
 	typedef BinaryTreeNodeThd<T> Node;
-	typedef _BinaryTreeIterator<T> Seif;
+	typedef _BinaryTreeIterator<T> Self;
 	Node* _node;
 
 	_BinaryTreeIterator(Node* node)
@@ -38,12 +38,12 @@ struct _BinaryTreeIterator
 		return _node->_data;
 	}
 
-	bool operator!=(const Seif& s)
+	bool operator!=(const Self& s)
 	{
 		return _node != s._node;
 	}
 
-	Seif operator++()
+	Self operator++()
 	{
 		if (_node->_rightTag == THREAD)
 		{
@@ -78,7 +78,7 @@ public:
 	Iterator Begin()
 	{
 		Node* sub = _root;
-		while (sub && sub->_leftTag == LINK)
+		while (sub->_left && sub->_leftTag == LINK)
 		{
 			sub = sub->_left;
 		}
@@ -95,12 +95,64 @@ public:
 		_InOrder(_root);
 		cout << endl;
 	}
-
+	void PreOrder()
+	{
+		_PreOrder(_root);
+		cout << endl;
+	}
 	void InOrderThreading()
 	{
 		Node* prev = NULL;
 		_InOrderThreading(_root,prev);
 		cout << endl;
+	}
+
+	void PreOrderThreading()
+	{
+		Node* prev = NULL;
+		_PreOrderThreading(_root, prev);
+		cout << endl;
+	}
+
+	void InOrderThread()
+	{
+		Node* cur = _root;
+
+		while (cur)
+		{
+			while (cur->_leftTag == LINK)
+			{
+				cur = cur->_left;
+			}
+
+			cout << cur->_data << " ";
+
+			//1、子树重新开始 2、为空已经线索化了
+			if (cur->_rightTag == LINK)
+			{
+				cur = cur->_right;
+			}
+			
+			else
+			{
+				while (cur->_rightTag == THREAD)
+				{
+					cur = cur->_right;
+					cout << cur->_data << " ";
+				}
+				//子问题
+				cur = cur->_right;
+			}
+			//while (cur->_rightTag == THREAD)
+			//{
+			//	//跳到后继节点-直接访问后继
+			//	cur = cur->_right;
+			//	cout << cur->_data << " ";
+			//}
+			////子问题
+			//cur = cur->_right;
+		}
+
 	}
 
 protected:
@@ -127,6 +179,22 @@ protected:
 		_InOrder(root->_right);
 	}
 
+	void _PreOrder(Node* _root)
+	{
+		if (_root == NULL)
+			return;
+
+		cout << _root->_data << " ";
+		if (_root->_leftTag == LINK)
+		{
+			_PreOrder(_root->_left);
+		}
+		if (_root->_rightTag == LINK)
+		{
+			_PreOrder(_root->_right);
+		}
+	}
+	
 	void _InOrderThreading(Node* cur,Node*& prev)
 	{
 		if (cur == NULL)
@@ -138,14 +206,46 @@ protected:
 			cur->_left = prev;
 			cur->_leftTag = THREAD;
 		}
-		prev = cur;
 
 		if (prev && prev->_right == NULL)
 		{
 			prev->_right = cur;
 			prev->_rightTag = THREAD;
 		}
+
+		prev = cur;
+		
 		_InOrderThreading(cur->_right,prev);
+	}
+
+	void _PreOrderThreading(Node* cur, Node*& prev)
+	{
+		if (cur == NULL)
+			return;
+
+		if (cur->_left == NULL)
+		{
+			cur->_left = prev;
+			cur->_leftTag = THREAD;
+		}
+
+		if (prev && prev->_right == NULL)
+		{
+			prev->_right = cur;
+			prev->_rightTag = THREAD;
+		}
+
+		prev = cur;
+
+		if (cur->_leftTag == LINK)
+		{
+			_PreOrderThreading(cur->_left, prev);
+		}
+
+		if (cur->_rightTag == LINK)
+		{
+			_PreOrderThreading(cur->_right, prev);
+		}
 	}
 protected:
 	Node* _root;
@@ -155,13 +255,17 @@ int main()
 {
 	int arr[] = { 1, 2, 3, '#', '#', 4, '#', '#', 5, 6 };
 	BinaryTreeThd<int> t1(arr,sizeof(arr)/sizeof(arr[0]),'#');
+	t1.InOrderThreading();
 	BinaryTreeThd<int>::Iterator it = t1.Begin();
-	while (it != t1.End())
+	while ((it) != t1.End())
 	{
 		cout << *it << " ";
+		it++;
 	}
-	t1.InOrder();
-	t1.InOrderThreading();
+	/*t1.InOrder();
+	t1.PreOrder();
+	t1.PreOrderThreading();
+	t1.InOrderThread();*/
 	system("pause");
 	return 0;
 }

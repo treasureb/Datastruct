@@ -125,125 +125,121 @@ public:
 	}
 
 	//求最短路径可走回头路
-	//void GetShortPath_R(Pos entry,stack<Pos>& path,stack<Pos>& ShortPath)
-	//{
-	//	Pos cur = entry;
-	//	//path.push(cur);
-
-	//			
-	//	if (entry._row == M - 1)
-	//	{
-	//		if (ShortPath.empty() || path.size() < ShortPath.size())
-	//		{
-	//			ShortPath = path;
-	//		}
-	//		//printf("出口的坐标为：[%d][%d]\n", cur._row, cur._col);
-	//		return ;	
-	//	}
-	//	
-	//	Pos next = cur;
-	//	
-	//	//上
-	//	next._row -= 1;
-	//	if (Check(cur,next))
-	//	{
-	//		path.push(cur);
-	//		_maze[next._row][next._col] = _maze[cur._row][cur._col] + 1;
-	//		GetShortPath_R(next, path, ShortPath);
-	//	}
-
-	//	//右
-	//	next = cur;
-	//	next._col += 1;
-	//	if (Check(cur,next))
-	//	{
-	//		path.push(cur);
-	//		_maze[next._row][next._col] = _maze[cur._row][cur._col] + 1;
-	//		GetShortPath_R(next, path, ShortPath);
-	//	}
-
-	//	//下
-	//	next = cur;
-	//	next._row += 1;
-	//	if (Check(cur,next))
-	//	{
-	//		path.push(cur);
-	//		_maze[next._row][next._col] = _maze[cur._row][cur._col] + 1;
-	//		GetShortPath_R(next, path, ShortPath);
-	//	}
-
-	//	//左
-	//	next = cur;
-	//	next._col -= 1;
-	//	if (Check(cur,next))
-	//	{
-	//		path.push(cur);
-	//		_maze[next._row][next._col] = _maze[cur._row][cur._col] + 1;
-	//		GetShortPath_R(next, path, ShortPath);
-	//	}
-	//	
-	//	path.pop();
-
-	//}
-
-	//不能走回头路
-	bool GetShortPath_R(Pos entry, stack<Pos>& path, stack<Pos>& ShortPath)
+	void GetShortPath_R(Pos entry,stack<Pos>& path,stack<Pos>& ShortPath)
 	{
 		Pos cur = entry;
 		path.push(cur);
-
-		_maze[cur._row][cur._col] = 2;
-
+				
 		if (entry._row == M - 1)
 		{
 			if (ShortPath.empty() || path.size() < ShortPath.size())
 			{
 				ShortPath = path;
 			}
-			//printf("出口的坐标为：[%d][%d]\n", cur._row, cur._col);
-			return true;
+			printf("出口的坐标为：[%d][%d]\n", cur._row, cur._col);
+		
 		}
-
+		
 		Pos next = cur;
-
+		
 		//上
 		next._row -= 1;
-		if (Check(next))
+		if (Check(cur,next))
 		{
-			//path.push(cur);
+			_maze[next._row][next._col] = _maze[cur._row][cur._col] + 1;
 			GetShortPath_R(next, path, ShortPath);
 		}
 
 		//右
 		next = cur;
 		next._col += 1;
-		if (Check(next))
-		{
-			//path.push(cur);
+		if (Check(cur,next))
+		{	
+			_maze[next._row][next._col] = _maze[cur._row][cur._col] + 1;
 			GetShortPath_R(next, path, ShortPath);
 		}
 
 		//下
 		next = cur;
 		next._row += 1;
-		if (Check(next))
+		if (Check(cur,next))
 		{
-			//path.push(cur);
+			_maze[next._row][next._col] = _maze[cur._row][cur._col] + 1;
 			GetShortPath_R(next, path, ShortPath);
 		}
 
 		//左
 		next = cur;
 		next._col -= 1;
-		if (Check(next))
+		if (Check(cur,next))
 		{
-			//path.push(cur);
+			_maze[next._row][next._col] = _maze[cur._row][cur._col] + 1;
 			GetShortPath_R(next, path, ShortPath);
 		}
-
+		
 		path.pop();
-		return false;
+
 	}
+
+	//不能走回头路
+	//void GetShortPath_R(Pos entry, stack<Pos>& path, stack<Pos>& ShortPath)
+	//{
+	//	Pos cur = entry;
+	//	path.push(cur);
+	//	_maze[cur._row][cur._col] = 2;
+	//	
+
+	//	if (entry._row == M - 1)
+	//	{
+	//		if (ShortPath.empty() || path.size() < ShortPath.size())
+	//		{
+	//			ShortPath = path;
+	//		}
+	//		printf("出口的坐标为：[%d][%d]\n", cur._row, cur._col);
+	//		//return true;
+	//	}
+
+	//	Pos next = cur;
+
+	//	//上
+	//	next._row -= 1;
+	//	if (Check(next))
+	//	{
+	//		GetShortPath_R(next, path, ShortPath);
+	//		
+	//	}
+
+	//	//右
+	//	next = cur;
+	//	next._col += 1;
+	//	if (Check(next))
+	//	{
+	//		
+	//		GetShortPath_R(next, path, ShortPath);
+	//		
+	//	}
+
+	//	//下
+	//	next = cur;
+	//	next._row += 1;
+	//	if (Check(next))
+	//	{
+	//		
+	//		GetShortPath_R(next, path, ShortPath);
+	//		
+	//	}
+
+	//	//左
+	//	next = cur;
+	//	next._col -= 1;
+	//	if (Check(next))
+	//	{
+	//	
+	//		GetShortPath_R(next, path, ShortPath);
+	//	}
+
+	//	path.pop();
+	//}
 
 
 
