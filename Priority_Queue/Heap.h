@@ -1,3 +1,5 @@
+#pragma once
+
 #include<iostream>
 #include<vector>
 #include<assert.h>
@@ -15,7 +17,7 @@ public:
 };
 
 template <class T>
-class Gread
+class Greader
 {
 public:
 	bool operator()(const T& l, const T& r)
@@ -24,11 +26,10 @@ public:
 	}
 };
 
-template <class T,class Compare>
+template <class T,class Compare = Greader<int>>
 class Heap
 {
 public:
-
 	Heap()
 	{}
 
@@ -85,11 +86,10 @@ private:
 		int child = root * 2 + 1;
 		while (child < _heap.size())
 		{
-			Compare com;
-			if ((child + 1) < _heap.size() && com( _heap[child + 1] , _heap[child]))
+			if ((child + 1) < _heap.size() && Compare()( _heap[child + 1] , _heap[child]))
 				++child;
 
-			if (com(_heap[child],_heap[parent]))
+			if (Compare()(_heap[child],_heap[parent]))
 			{
 				swap(_heap[parent] , _heap[child]);
 				parent = child;
@@ -109,8 +109,7 @@ private:
 
 		while (parent >= 0)//chile > 0
 		{ 
-			Compare com;
-			if (com(_heap[child] , _heap[parent]))
+			if (Compare()(_heap[child] , _heap[parent]))
 			{
 				swap(_heap[child], _heap[parent]);
 				child = parent;
@@ -126,11 +125,3 @@ private:
 	vector<T> _heap;
 };
 
-int main()
-{
-	int a[] = { 53, 17, 78, 9, 45, 65, 87, 23 };
-	Heap<int,Less<int>> h(a, sizeof(a) / sizeof(a[0]));
-	h.Push(97);
-	h.Pop();
-	return 0;
-}
