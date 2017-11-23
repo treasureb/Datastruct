@@ -8,9 +8,9 @@ using namespace std;
 class UnionFind
 {
 public:
-    UnionFind()
+    UnionFind(int x)
     {
-        _setbit.resize();
+        _setbit.resize(x+1,-1);
     }
     
     int FindRoot(int x)
@@ -40,21 +40,32 @@ public:
         int count = 0;
         for(int i =0;i < _setbit.size();++i)
         {
-            if(_setbit[i] > 0)
+            if(_setbit[i] <  0)
                 ++count;
         }
-        return count;
+        return count - 1;
     }
 private:
     vector<int> _setbit;
+};
+
+int Friend(const int n,const int m,int r[][4])
+{
+    UnionFind un(n);
+    for(int i =0;i<m;++i)
+    {
+        un.Union(r[i][0],r[i][1]);
+    }
+        
+    return un.Size();
 }
 
-int Friend(int n,int m,int r[][])
+void TestUnionFind()
 {
-    UnionFind un;
-    const n = 5;
-    int m = 3;
-    int r[n][3] = {{1,2},{2,3},{4,5}};
-    un.Union(n,m)
+    const int n = 5;
+    const int m = 4;
+    int r[n][4] = {{1,2},{2,3},{4,5},{3,4}};
+    int num = Friend(n,m,r);
+    cout<<num<<endl;
 }
 #endif

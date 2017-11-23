@@ -3,6 +3,7 @@
 
 #include<iostream>
 #include<assert.h>
+#include"InsertSort.h"
 using namespace std;
 
 void _MergeSort(int* array,int left,int right)
@@ -12,6 +13,11 @@ void _MergeSort(int* array,int left,int right)
     if(left >= right)
     {
         return;
+    }
+
+    if((right - left) > 5)
+    {
+        InsertSort(array,right - left);
     }
     
     int mid = left +((right - left) >> 1);

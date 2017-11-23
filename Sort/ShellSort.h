@@ -1,7 +1,11 @@
-#pragma once
-#include<stdio.h>
+#ifndef __SHELLSORT__
+#define __SHELLSORT__
 
-void ShellSort(int *arr, int size)
+#include<iostream>
+#include<assert.h>
+using namespace std;
+
+void ShellSort1(int *array, int size)
 {
 	int gap = size;
 	while (gap > 1)
@@ -10,23 +14,51 @@ void ShellSort(int *arr, int size)
 		for (size_t i = gap; i < size; ++i)//如果是++gap,则外层需要在加一层循环来排每个组，++gap可以每次排每个组的一个数
 		{
 			int end = i - gap;
-			int key = arr[i];
-			while (end >= 0 && arr[end] > key)
+			int key = array[i];
+			while (end >= 0 && array[end] > key)
 			{
-				arr[end + gap] = arr[end];
+				array[end + gap] = array[end];
 				end -= gap;
 			}
-			arr[end] = key;
+			array[end] = key;
 		}
 	}
 }
 
-void Test2()
+void ShellSort2(int* array,int size)
 {
-	int arr[] = { 2, 5, 3, 6, 0, 8, 7, 1, 9, 4 };
-	ShellSort(arr, 10);
+    assert(array);
+    int gap = size;
+    while(gap > 1)
+    {
+        gap = gap/3 + 1;
+        for(int i = 0;i < size-gap;++i)
+        {
+            int end = i;
+            int tmp =array[end + gap];
+            while(end >= 0)
+            {
+                if(array[end] > tmp)
+                    array[end + gap] = array[end];
+                else
+                    break;
+                end -= gap;
+            }
+            array[end+gap] = tmp; 
+        }
+    }
+}
+
+void TestShellSort()
+{
+	int array[] = { 2, 5, 3, 6, 0, 8, 7, 1, 9, 4 };
+	ShellSort2(array, 10);
 	for (int i = 0; i < 10; i++)
 	{
-		printf("%2d", arr[i]);
+		cout<<array[i] <<" ";
 	}
+
+    cout<<endl;
+
 }
+#endif
