@@ -126,7 +126,122 @@ public:
 		return ret;
 	}
 
+    bool IsSymmetrical()
+    {
+        return  _IsSymmetrical(_root,_root);
+    }
+
+    void Print()
+    {
+        _Print(_root);
+    }
+
+    Node* FindParent(Node* x1,Node* x2)
+    {
+        stack<Node*> path1;
+        stack<Node*> path2;
+        if(!GetPath(_root,x1,path1) || !GetPath(_root,x2,path2))
+            return NULL;
+        while(!path1.empty())
+        {
+            if(path1.size() > path2.size())
+            {
+                int size = path1.size() - path2.size();
+                while(size--)
+                path1.pop();
+            }
+            if(path1.size() < path2.size())
+            {
+                int size = path2.size() - path1.size();
+                while(size--)
+                path2.pop();
+            }
+            else 
+            {
+                if(path1.top() == path2.top()) 
+                return path1.top();
+  
+                path1.pop();
+                path2.pop();
+            }
+        }
+    }
+    
+    int FindParentInt(Node* x1,Node* x2)
+    {
+        Node* cur = FindParent(x1,x2);
+        return cur->_data;
+    }
+    
 private:
+    bool GetPath(Node* root,Node* x,stack<Node*>& path)
+    {
+        if(root == NULL)
+            return false;
+
+        path.push(root);
+        if(root == x)
+        return true;
+        
+        if(GetPath(root->_left,x,path))
+            return true;
+        if(GetPath(root->_right,x,path))
+            return true;
+
+        path.pop();
+        return false;
+    }
+
+    void _Print(Node* root)
+    {
+        if(_root == NULL)
+            return;
+
+        queue<Node*> node;
+        node.push(_root);
+        int nextLevel = 0;
+        int toBePrint = 1;
+        while(!node.empty())
+        {
+            Node* cur = node.front();
+            cout<<cur->_data<<" ";
+
+            if(cur->_left != NULL)
+            {
+                node.push(cur->_left);
+                ++nextLevel;
+            }
+            if(cur->_right != NULL)
+            {
+                node.push(cur->_right);
+                ++nextLevel;
+            }
+
+            node.pop();
+            --toBePrint;
+            if(toBePrint == 0)
+            {
+                cout<<endl;
+                toBePrint = nextLevel;
+                nextLevel = 0;
+            }
+        }
+    }
+
+    bool _IsSymmetrical(Node* root1,Node* root2)
+    {
+        if(root1 == NULL && root2 == NULL)
+            return true;
+
+        if(root1 == NULL || root2 == NULL)
+            return false;
+
+        if(root1->_data != root2->_data)
+            return false;
+
+        return _IsSymmetrical(root1->_left,root2->_right) && _IsSymmetrical(root1->_right,root2->_left);
+    }
+
 	void _CreateNode(Node* &root, const T array[], size_t size, size_t& index, const T& invalid)
 	{
 		if (size > 0 && array[index] != invalid)
@@ -373,21 +488,25 @@ int main()
 {
 	int array[] = { 1, 2,'#',4,'#','#',5,'#','#'};
 	BinaryTree<int> bt(array, sizeof(array), '#');
-	/*bt.PreOrder();
-	bt.InOrder();
-	bt.PostOrder();
-	bt.Size();
-	bt.Size2();
-	bt.LeafSize();
-	bt.Height();
-	bt.KofNumber(3);
-	bt.levelOrder();*/
-	bt.PreOrder_Not();
-	bt.InOrder_Not();
-	bt.PostOrder_Not();
-	bt.IsCompleteTree();
-	bt.Find(5);
-	system("pause");
-	return 0;
+//	bt.PreOrder();
+//	bt.InOrder();
+//	bt.PostOrder();
+//	bt.Size();
+//	bt.Size2();
+//	bt.LeafSize();
+//	bt.Height();
+//	bt.KofNumber(3);
+//	bt.levelOrder();
+//	bt.PreOrder_Not();
+//	bt.InOrder_Not();
+//	bt.PostOrder_Not();
+//	bt.IsCompleteTree();
+//	bt.Find(5);
+//    cout<< bt.IsSymmetrical()<<endl;
+//    bt.levelOrder();
+//    bt.Print();
+    
+   cout<< bt.FindParentInt(bt.Find(4),bt.Find(5))<<endl;
+    return 0;
 }
 
