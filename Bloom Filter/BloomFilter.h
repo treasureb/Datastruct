@@ -1,4 +1,4 @@
-#pragma once
+
 
 #include"BitMap.h"
 using namespace std;

@@ -5,6 +5,8 @@
 #include<assert.h>
 using namespace std;
 
+
+//节点类型
 template<class T>
 struct BinaryTreeNode
 {
@@ -136,6 +138,7 @@ public:
         _Print(_root);
     }
 
+	//求两个节点的最近父节点
     Node* FindParent(Node* x1,Node* x2)
     {
         stack<Node*> path1;
@@ -192,6 +195,7 @@ private:
         return false;
     }
 
+	//树型结构打印
     void _Print(Node* root)
     {
         if(_root == NULL)
@@ -228,6 +232,7 @@ private:
         }
     }
 
+	//判断是否为一个镜像树
     bool _IsSymmetrical(Node* root1,Node* root2)
     {
         if(root1 == NULL && root2 == NULL)
@@ -242,6 +247,7 @@ private:
         return _IsSymmetrical(root1->_left,root2->_right) && _IsSymmetrical(root1->_right,root2->_left);
     }
 
+	//创建节点
 	void _CreateNode(Node* &root, const T array[], size_t size, size_t& index, const T& invalid)
 	{
 		if (size > 0 && array[index] != invalid)
@@ -252,6 +258,7 @@ private:
 		}
 	}
 
+	//递归实现前序遍历
 	void _PreOrder(Node* root)
 	{
 		if (root == NULL)
@@ -262,6 +269,7 @@ private:
 		_PreOrder(root->_right);
 	}
 
+	//递归实现中序
 	void _InOrder(Node* root)
 	{
 		if (root == NULL)
@@ -272,6 +280,7 @@ private:
 		_InOrder(root->_right);
 	}
 
+	//递归实现后序
 	void _PostOrder(Node* root)
 	{
 		if (root == NULL)
@@ -282,6 +291,7 @@ private:
 		cout << root->_data <<" " ;
 	}
 
+	//一棵树中的节点个数
 	size_t _Size(Node* root)
 	{
 		if (root == NULL)
@@ -302,6 +312,7 @@ private:
 		return count;
 	}
 
+	//叶子节点的个数
 	size_t _LeafSize(Node* root,size_t& count)
 	{
 		if (root == NULL)
@@ -316,6 +327,7 @@ private:
 		return count;
 	}
 	
+	//树的高度
 	size_t _Height(Node* root)
 	{
 		if (root == NULL)
@@ -327,6 +339,7 @@ private:
 		return left > right ? left + 1 : right + 1;
 	}
 
+	//某一层的节点个数
 	size_t _KofNumber(Node* root,size_t level)
 	{
 		if (root == NULL || level <= 0)
@@ -338,6 +351,7 @@ private:
 		return _KofNumber(root->_left, level - 1) + _KofNumber(root->_right, level - 1);
 	}
 
+	//层序遍历
 	void _leverOrder(Node* root)
 	{
 		if (root == NULL)
@@ -361,6 +375,7 @@ private:
 
 	}
 
+	//判断是否为完全二叉树
 	bool _IsCompleteTree(Node* root,bool& fulltag)
 	{
 		if (root == NULL)
@@ -397,7 +412,8 @@ private:
 		}
 		return true;
 	}
-
+	
+	//非递归实现前序
 	void _PreOrder_Not(Node* root)
 	{
 		stack<Node*> s;
@@ -419,6 +435,7 @@ private:
 		}
 	}
 
+	//非递归实现中序
 	void _InOrder_Not(Node* root)
 	{
 		stack<Node*> s;
@@ -438,7 +455,7 @@ private:
 		}
 	}
 
-
+	//非递归实现后序遍历
 	void _PostOrder_Not(Node* root,Node*& prev)
 	{
 		stack<Node*> s;
@@ -464,7 +481,7 @@ private:
 		}
 	}
 
-
+	//查找值为x的节点
 	Node* _Find(Node* root, const T& x)
 	{
 		if (root == NULL)
