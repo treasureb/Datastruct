@@ -256,6 +256,8 @@ int main()
 	int arr[] = { 1, 2, 3, '#', '#', 4, '#', '#', 5, 6 };
 	BinaryTreeThd<int> t1(arr,sizeof(arr)/sizeof(arr[0]),'#');
 	t1.InOrderThreading();
+#if 0
+	t1.InOrderThreading();
 	BinaryTreeThd<int>::Iterator it = t1.Begin();
 	while ((it) != t1.End())
 	{
@@ -266,6 +268,7 @@ int main()
 	t1.PreOrder();
 	t1.PreOrderThreading();
 	t1.InOrderThread();*/
+#endif
 	system("pause");
 	return 0;
 }
