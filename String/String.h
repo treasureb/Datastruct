@@ -51,7 +51,7 @@ public:
 };
 */
 
-#if 1
+/* Sting类的深拷贝实现
 class String
 {
 public:
@@ -78,7 +78,7 @@ public:
         delete[] _str;
     }
     
-    /* 最传统的写法
+    // 最传统的写法
     String& operator=(const String& rhs)
     {
         if(this != &rhs)
@@ -90,16 +90,16 @@ public:
         }
         return *this;
     }
-    */
+    
 
-    /*传统的现代写法
+    //传统的现代写法
     String& operator=(const String& rhs)
     {
         String tmp(rhs);
         Swap(tmp);
         return *this;
     }
-    */
+    
 
     
     //采用pass-by-value
@@ -127,7 +127,7 @@ public:
         std::swap(_str,rhs._str);
     }
 
-    char& operator[](int index)
+    char& operator[](size_t index)
     {
         return _str[index];
     }
@@ -181,5 +181,168 @@ bool operator!=(const String& str1,const String& str2)
 {
     return !(strcmp(str1._str,str2._str));
 }
-#endif
+
+*/
+
+//1.0写实拷贝
+/*
+class String
+{
+public:
+    String()
+        :_str(new char[1])
+        ,_count(new int(1))
+    {
+        *_str = '\0';
+    }
+
+    String(const char* str)
+        :_str(new char[strlen(str)+1])
+         ,_count(new int(1))
+    {
+        strcpy(_str,str);
+    }
+
+    ~String()
+    {
+        if(--(*_count) == 0)
+        {
+            delete[] _str;
+            delete _count;
+            _str = nullptr;
+            _count = nullptr;
+        }
+    }
+
+    String(const String& rhs)
+        :_str(rhs._str)
+         ,_count(rhs._count)
+    {
+        (*_count)++;
+    }
+
+    String& operator=(const String& rhs)
+    {
+        if(this != &rhs)
+        {
+            if(--(*_count) == 0)
+            {
+                delete[] _str;
+                delete _count;
+            }
+            _str = rhs._str;
+            _count = rhs._count;
+            (*_count)++;
+        }
+        return *this;
+    }
+
+    char& operator[](size_t index)
+    {
+        if(*_count > 1)
+        {
+            char* tmp = new char[strlen(_str)+1];
+            strcpy(tmp,_str);
+            _str = tmp;
+            (*_count)--;
+            _count = new int(1);
+        }
+        return *(_str+index);
+    }
+
+    char* C_Str()
+    {
+        return _str;
+    }
+    friend std::ostream& operator<<(std::ostream& out,const String& rhs);
+private:
+    char* _str;
+    int*  _count;
+};
+std::ostream& operator<<(std::ostream& out,const String& rhs)
+{
+    out<<rhs._str;
+    return out;
+}
+
+*/
+
+class String
+{
+public:
+    String()
+        :_str(new char[8+1])
+    {
+        _str = _str+8;
+        *_str = '\0';
+        int count = Count(_str);
+        count = 1;
+    }
+
+    String(char* str)
+        :_str(new char[strlen(str)+8+1])
+    {
+        _str = _str+8;
+        strcpy(_str,str);
+    }
+
+    String(const String& rhs)
+        :_str(rhs._str)
+    {
+        ++Count(_str);
+    }
+
+    String& operator=(const String& rhs)
+    {
+        if(--Count(_str) == 0)
+        {
+            delete[] (_str+8);
+            _str = nullptr;
+        }
+        _str = rhs._str;
+        ++Count(_str);
+        return *this;
+    }
+
+    ~String()
+    {
+        if(--(Count(_str)) == 0)
+        {
+            delete[] _str;
+            _str = nullptr;
+        }
+    }
+    
+    char& operator[](size_t index)
+    {
+        if(Count(_str) > 1)
+        {
+            String tmp(_str); 
+            Count(_str)--;
+            Count(tmp._str) = 1;
+        }
+        return *(_str+8+index);
+    }
+
+    int& Count(char* str)
+    {
+        return *(int*)(str-8);
+    }
+
+    char* C_Str()
+    {
+        return _str;
+    }
+    friend std::ostream& operator<<(std::ostream& out,const String& rhs);
+private:
+    char* _str;
+};
+
+
+std::ostream& operator<<(std::ostream& out,const String& rhs)
+{
+    out<<rhs._str;
+    return out;
+}
+
 #endif
