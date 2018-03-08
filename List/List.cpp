@@ -1,8 +1,9 @@
+#include<iostream>
 #include<stdio.h>
 #include<assert.h>
 #include<malloc.h>
 #include<stdlib.h>
-
+using namespace std;
 
 typedef int DataType;
 typedef struct Node
@@ -29,12 +30,13 @@ void Pushback(PNode* pHead, DataType data)
 	}
 	else
 	{
-		PNode pCur = *pHead;
-		while (pCur->next)
+		PNode pPre = *pHead;
+        PNode pCur = BuyNode(data);
+		while (pPre->next)
 		{
-			pCur = pCur->next;
+			pPre = pPre->next;
 		}
-		pCur->next = NULL;
+		pPre->next = pCur;
 	}
 }
 
@@ -130,7 +132,8 @@ void Erase(PNode *pHead, PNode Pos)
 	assert(pHead);
 	if (NULL == *pHead || NULL == Pos)
 		return;
-	else if (Pos == *pHead)
+    //如果删除的是头节点
+    else if (Pos == *pHead)
 	{
 		*pHead = Pos->next;
 		free(Pos);
@@ -272,6 +275,7 @@ void PrintListFromTailToHead(PNode pHead)
 		printf("%d->", pHead->data);
 	}
 }
+
 //删除无头单链表的非尾节点
 void DeleteNotTailNode(PNode pPos)
 {
@@ -285,6 +289,7 @@ void DeleteNotTailNode(PNode pPos)
 	free(pDelNode);
 
 }
+
 //在无头单链表非头结点前插入新节点
 void InsertNotHeadNode(PNode pos, DataType data)
 {
@@ -293,7 +298,7 @@ void InsertNotHeadNode(PNode pos, DataType data)
 		return;
 	else
 	{
-		PNode pNewNode = BuyNode(pos->data);
+		pNewNode = BuyNode(pos->data);
 		if (pNewNode)
 		{
 			pNewNode->next = pos->next;
@@ -304,6 +309,7 @@ void InsertNotHeadNode(PNode pos, DataType data)
 
 }
 
+//对单链表进行排序
 void Sort(PNode l1, PNode l2)
 {
 	PNode p1, p2, tmp;
@@ -325,11 +331,12 @@ void Sort(PNode l1, PNode l2)
 		p1->next = p2;
 }
 
+//逆置单链表
 PNode ReverseList(PNode pHead)
 {
-	PNode pPre;
-	PNode pCur;
-	PNode Next;
+	PNode pPre = NULL;
+	PNode pCur = NULL;
+	PNode Next = NULL;
 
 	pPre = pHead;
 	pCur = pHead->next;
@@ -343,9 +350,12 @@ PNode ReverseList(PNode pHead)
 	}
 	pHead->next = NULL;
 	pHead = pPre;//pPre即为最后的头结点 
+
+    return pHead;
 }
 
 
+//查找倒数第K个节点
 PNode Search(PNode Head, int k)
 {
 
@@ -377,6 +387,7 @@ PNode Search(PNode Head, int k)
 	return Slow;
 }
 
+//判断是否带环
 bool IsExitsLoop(PNode Head)
 {
 	PNode Fast = Head;
@@ -392,8 +403,10 @@ bool IsExitsLoop(PNode Head)
 	if (Fast == NULL || Fast->next == NULL)
 		return false;
 
+    return false;
 }
 
+//寻找环的入口
  PNode FindLoopPort(PNode Head)
 {
 	PNode Slow = Head;
@@ -419,6 +432,7 @@ bool IsExitsLoop(PNode Head)
 	return Slow;
 }
 
+//求环的长度
  unsigned int GetLoopLength(PNode Head)
  {
 	 PNode Slow = Head, Fast = Head;
@@ -496,8 +510,129 @@ bool IsExitsLoop(PNode Head)
 	 }
 	 return p1;
  }
+
+//合并两个有序链表，合并完之后还是一个有序链表
+PNode  MergeTwoList(PNode head1,PNode head2)
+{
+    Node* p1 = NULL;
+    Node* p2 = NULL;
+    Node* head = NULL;
+
+    //选两个链表中第一个节点小的链表的头作为新链表的头
+    if(head1->data > head2->data)
+    {
+        head = head2;
+        p1 = head1;
+        p2 = head2->next; 
+    }
+    else
+    {
+        head = head1;
+        p2 = head2;
+        p1 = head1->next;
+    }
+
+    //依次比较= hea
+    Node* cur = head;
+    while(p1 != NULL && p2 != NULL)
+    {
+        if(p1->data >= p2->data)
+        {
+            cur->next = p2;
+            cur = p2;
+            p2 = p2->next;
+        }
+        else
+        {
+            cur->next = p1;
+            cur = p1;
+            p1 = p1->next;
+        }
+    }
+    //链表1不为空，直接链在新表的后面
+    if(p1 != NULL)
+    {
+        cur->next = p1;
+    }
+    //链表2不为空，直接链在新表的后面
+    if(p2 != NULL)
+    {
+        cur->next = p2;
+    }
+
+    return head;
+}
+
+PNode MergeTwoListR(PNode Head1,PNode Head2)
+{
+    if(Head1 == NULL)
+        return Head2;
+    if(Head2 == NULL)
+        return Head1;
+
+    PNode MergeNode = NULL;
+    if(Head1->data < Head2->data)
+    {
+        MergeNode = Head1;
+        MergeNode->next = MergeTwoListR(Head1->next,Head2);
+    }
+    else
+    {
+        MergeNode = Head2->next;
+        MergeNode->next = MergeTwoListR(Head2,Head1->next);
+    }
+
+    return MergeNode;
+}
+
+PNode JosephCircle(PNode Head,int Number)
+{
+    int count = Number;
+    Node* pre = Head;
+    Node* cur = Head;
+
+    while(pre->next != pre)
+    {
+        //每次都要转m次
+        count = Number;
+        while(count--)
+        {
+            cur = pre;
+            pre = pre->next;
+        }
+
+        cur->next = pre->next;
+        free(pre);
+        pre = cur->next;
+    }
+    return pre;
+}
+
+void TestMergeTwoList()
+{
+    PNode Head1,Head2;
+    InitList(&Head1);
+    InitList(&Head2);
+    Pushback(&Head1,1);
+    Pushback(&Head1,3);
+    Pushback(&Head1,5);
+    Pushback(&Head1,7);
+
+    
+    Pushback(&Head2,2);
+    Pushback(&Head2,4);
+    Pushback(&Head2,6);
+    Pushback(&Head2,8);
+    
+    Printlist(Head1); 
+    Printlist(Head2);
+    PNode Tmp = MergeTwoList(Head1,Head2);
+   // PNode Tmp = MergeTwoListR(Head1,Head2);
+    Printlist(Tmp);
+}
+
 int main()
 {
-
+    TestMergeTwoList();
 	return 0;
 }

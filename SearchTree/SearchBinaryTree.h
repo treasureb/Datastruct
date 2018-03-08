@@ -325,7 +325,7 @@ void Test()
 {
 	SearchBinaryTree<int> s;
 	int arr[] = { 4, 2, 7, 8, 0, 1, 3, 5, 6, 9 };
-	for (int i = 0; i < sizeof(arr) / sizeof(arr[0]); i++)
+	for (size_t i = 0; i < sizeof(arr) / sizeof(arr[0]); i++)
 	{
 		s.Insert(arr[i]);
 	}

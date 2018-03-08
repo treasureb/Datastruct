@@ -15,6 +15,7 @@ void _MergeSort(int* array,int left,int right)
         return;
     }
 
+    //防止递归过深，采用直接插入优化
     if((right - left) > 5)
     {
         InsertSort(array,right - left);

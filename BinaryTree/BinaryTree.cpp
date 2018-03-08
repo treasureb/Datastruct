@@ -383,7 +383,8 @@ private:
 
 		queue<Node*> q;
 		q.push(root);
-
+        
+        bool flag = false;
 		while (!q.empty())
 		{
 			Node* front = q.front();
@@ -503,7 +504,7 @@ private:
 
 int main()
 {
-	int array[] = { 1, 2,'#',4,'#','#',5,'#','#'};
+	int array[] = { 1, 2,'#','#',5,'#','#'};
 	BinaryTree<int> bt(array, sizeof(array), '#');
 //	bt.PreOrder();
 //	bt.InOrder();
@@ -523,7 +524,8 @@ int main()
 //    bt.levelOrder();
 //    bt.Print();
     
-   cout<< bt.FindParentInt(bt.Find(4),bt.Find(5))<<endl;
+//   cout<< bt.FindParentInt(bt.Find(4),bt.Find(5))<<endl;
+    bt.IsCompleteTree();
     return 0;
 }
 
