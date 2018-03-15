@@ -7,6 +7,7 @@
 #include<assert.h>
 using namespace std;
 
+//防止选到极端值，故采用三数取中法
 int GetMid(int* array,int left,int right)
 {
     assert(array);
@@ -32,12 +33,14 @@ int GetMid(int* array,int left,int right)
 
 }
 
+//左右指针法
 int PartSort1(int* array,int left,int right)
 {
     assert(array);
     int mid = GetMid(array,left,right);
     swap(array[mid],array[right]);
     
+    //这里是引用！！！
     int& key = array[right];
     while(left < right)
     {
@@ -49,10 +52,12 @@ int PartSort1(int* array,int left,int right)
         swap(array[left],array[right]);
     }
 
+    //依次遍历后将小的和大的交换
     swap(array[left],key);
     return left;
 }
 
+//挖坑法
 int PartSort2(int* array,int left,int right)
 {
     assert(array);
@@ -64,16 +69,23 @@ int PartSort2(int* array,int left,int right)
     {
         while(left < right && array[left] <= key)
             ++left;
+
+        //将左边小的那个数，放入右边的坑位
         array[right] = array[left];
        
         while(left < right && array[right] >= key)
             --right;
+
+        //将右边大的数，放入左边的坑位
         array[left] = array[right];
     }
+
+    //最后一个坑位肯定再array[right]处
     array[right] = key;
     return right;
 }
 
+//前后指针法
 int PartSort3(int* array,int left,int right)
 {
     assert(array);
@@ -104,9 +116,11 @@ void QuickSort(int* array,int left,int right)
     if(left >= right)
         return;
 
+    //当递归过深时，采用直接插入
     if((right - left) <= 5)
     InsertSort(array,right-left+1);
     
+    //具体采用的方法
     int index = PartSort3(array,left,right);
     QuickSort(array,left,index-1);
     QuickSort(array,index+1,right);
