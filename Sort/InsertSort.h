@@ -51,8 +51,8 @@ void InsertSort2(int* array, int size)
 			array[j] = array[j - 1];
 		}
 		array[right + 1] = end;
-	}
-}
+	   }
+      }
 }
 
 void TestInsertSort()
