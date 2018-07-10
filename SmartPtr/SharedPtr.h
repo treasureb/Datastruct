@@ -9,7 +9,7 @@ class SharedPtr
 {
 	friend class WeakPtr<T>;
 public:
-	SharedPtr(T* ptr = NULL)//¸ø³öÈ±Ê¡µÄ¹¹Ôìº¯Êı
+	SharedPtr(T* ptr = NULL)//ç»™å‡ºç¼ºçœçš„æ„é€ å‡½æ•°
 		:_ptr(ptr)
 		, _refCount(new int(1))
 	{}
@@ -21,6 +21,8 @@ public:
 			printf("SharedPtrdelete:0x:%p\n", _ptr);
 			delete _ptr;		
 			delete _refCount;
+			_ptr = NULL;
+			_refCount = NULL;
 		}
 	}
 
@@ -125,7 +127,7 @@ void TestCycleRef()
 	SharedPtr<ListNode> cur = new ListNode;
 	SharedPtr<ListNode> next = new ListNode;
 	
-	cur->_next = next;// Ã»ÓĞÄ¬ÈÏµÄ¹¹Ôìº¯Êı¿ÉÒÔµ÷ÓÃ
+	cur->_next = next;// æ²¡æœ‰é»˜è®¤çš„æ„é€ å‡½æ•°å¯ä»¥è°ƒç”¨
 	next->_next = cur;
 }
 
