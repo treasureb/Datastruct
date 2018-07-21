@@ -48,14 +48,18 @@ using namespace std;
 void bubble_sort(int* array,int len){
     assert(array);
 
+    int last_swap = 0;
     bool flag = true;
+    int sortBorder = len-1;
     for(int i = 0;i < len;++i){
-        for(int j = 0;j < len-i-1;++j){
+        for(int j = 0;j < sortBorder;++j){
             if(array[j] > array[j+1]){
                 swap(array[j],array[j+1]);
                 flag = false;
+                last_swap = j;
             }
         }
+        sortBorder = last_swap;
         if(flag)
             break;
     }
