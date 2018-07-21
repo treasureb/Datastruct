@@ -65,9 +65,38 @@ void bubble_sort(int* array,int len){
     }
 }
 
+void cocktail_sort(int* array,int len){
+    assert(array);
+    int begin = 0;
+    int end = len - 1;
+    int sortBorder = 0;
+    bool Swap = true;
+    while(Swap){
+        Swap = false;
+        //最大的数放在最后一位
+        for(int i = begin;i < end;++i){
+            if(array[i] > array[i+1]){
+                swap(array[i],array[i+1]);
+                Swap = true;
+                sortBorder = i;
+            }
+        }
+
+        end = sortBorder;
+        for(int j = end;j > begin;--j){
+            if(array[j] < array[j-1]){
+                swap(array[j],array[j-1]);
+                Swap = true;
+                sortBorder = j;
+            }
+        }
+        begin = sortBorder;
+    }
+}
+
 int main(){
     int array[10] = {2,5,3,7,8,1,6,0,4,9};
-    bubble_sort(array,sizeof(array)/sizeof(array[0]));
+    cocktail_sort(array,sizeof(array)/sizeof(array[0]));
     for(int i = 0;i < 10;++i){
         printf("%d ",array[i]);
     }
