@@ -1,6 +1,9 @@
 #pragma once
 
 #include<iostream>
+
+using namespace std;
+
 template <class T>
 class ScopedArray
 {
@@ -38,12 +41,13 @@ struct BB
 
 void TestScopedArray()
 {
-	/*ScopedArray<int> sp1(new int[10]);
+	ScopedArray<int> sp1(new int[10]);
 	sp1[3] = 10;
+    cout<<sp1[3]<<endl;
 
 	ScopedArray<BB> sp2(new BB[10]);
 	sp2[5].a1 = 10;
 	sp2[5].a2 = 20;
-	cout << sp2[5].a1 << " ";
-	cout << sp2[5].a2 << " ";*/
+	cout << sp2[5].a1 <<endl;
+	cout << sp2[5].a2 <<endl;
 }
