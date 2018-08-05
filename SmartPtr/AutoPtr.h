@@ -42,7 +42,7 @@ public:
 	{
 		if (_ptr)
 		{
-			printf("AutoPtrdelete:Ox%p",_ptr);
+            cout<<"delete ptr"<<&_ptr<<endl;
 			delete _ptr;
 		}
 	}
@@ -63,37 +63,37 @@ private:
 
 void Test()
 {
-	//int* p1 = new int(10);
-	//*p1 = 100;
-	//cout << *p1 << " ";
-	//
-	//AutoPtr<int> ap1(new int(20));
-	//*ap1 = 200;
-	//cout << *ap1 << " ";
-	//
-	//
-	//AA* p2 = new AA();//定义AA时后面加了()则初始化为0，否则为随机数
-	///*cout << p2->a1 << " ";
-	//cout << p2->a2 <<" ";*/
-	//
-	//p2->a1 = 10;
-	//(*p2).a2 = 10;
-	//
-	//AutoPtr<AA> ap2(new AA());
-	//(*ap2).a1 = 10;
-	//(ap2.operator*()).a1 = 100;
-	//
-	//ap2->a2 = 10;//ap2->->a2编译器优化成ap2->a2
-	//(ap2.operator->())->a2 = 100;
-	//
+    int* p1 = new int(10);
+   // *p1 = 100;
+   // cout << *p1 << " "<<endl;
+   // 
+   // AutoPtr<int> ap1(new int(20));
+   // *ap1 = 200;
+   // cout << *ap1 << " "<<endl;
+   // 
+   // 
+   // AA* p2 = new AA();//定义AA时后面加了()则初始化为0，否则为随机数
+   // cout << p2->a1 << " ";
+   // cout << p2->a2 <<" ";
+   // 
+   // p2->a1 = 10;
+   // (*p2).a2 = 10;
+   // 
+   // AutoPtr<AA> ap2(new AA());
+   // (*ap2).a1 = 10;
+   // (ap2.operator*()).a1 = 100;
+   // 
+   // ap2->a2 = 10;//ap2->->a2编译器优化成ap2->a2
+   // (ap2.operator->())->a2 = 100;
+	
 
-	//AutoPtr<int> ap1(new int());
-	//AutoPtr<int> ap2(ap1);//两个对象指向同一个空间，会被析构两次
+	AutoPtr<int> ap3(new int());
+	AutoPtr<int> ap4(ap3);//两个对象指向同一个空间，会被析构两次
 
-	//AutoPtr<int> ap3(ap2);
-	////(*ap1) = 10;//因为ap1指针现在悬空，所以给空指针赋一个常量会崩溃
+	AutoPtr<int> ap5(ap3);
+	(*ap3) = 10;//因为ap1指针现在悬空，所以给空指针赋一个常量会崩溃
 
-	//AutoPtr<int> ap4(new int(10));
+	//AutoPtr<int> ap6(new int(10));
 	//ap3 = ap4;
 
 }
