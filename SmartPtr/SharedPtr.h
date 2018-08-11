@@ -1,6 +1,20 @@
 #pragma once
 
 #include<iostream>
+
+using namespace std;
+
+class Counter{
+public:
+    Counter()
+        :s(0)
+         ,w(0)
+    {}
+
+    int s;  //shared_ptr中引用计数
+    int w;  //weak_ptr中引用计数
+};
+
 template<class T>
 class WeakPtr;
 
@@ -10,63 +24,79 @@ class SharedPtr
 	friend class WeakPtr<T>;
 public:
 	SharedPtr(T* ptr = NULL)//给出缺省的构造函数
-		:_ptr(ptr)
-		, _refCount(new int(1))
-	{}
+		:ptr_(ptr)
+    {
+        cnt_ = new Counter();
+        if(ptr)
+            cnt_->s = 1;
 
-	void Release()
-	{
-		if (--(*_refCount) == 0)
-		{	
-			printf("SharedPtrdelete:0x:%p\n", _ptr);
-			delete _ptr;		
-			delete _refCount;
-			_ptr = NULL;
-			_refCount = NULL;
-		}
-	}
+        cout<<" in construct "<<cnt_->s<<endl;
+    }
 
 	~SharedPtr()
 	{
-		Release();
+		release();
 	}
 
 	SharedPtr(const SharedPtr<T>& sp)
-		:_ptr(sp._ptr)
-		, _refCount(sp._refCount)
+		:ptr_(sp.ptr_)
+		,cnt_(sp.cnt_)
 	{
-		++(*_refCount);
+        cnt_->s++;
+        cout<<" in copy construct "<<cnt_->s<<endl; 
 	}
+
+    SharedPtr(const WeakPtr<T>& wp){
+        ptr_ = wp.ptr_;
+        cnt_ = wp._cnt;
+        cnt_->w++;
+
+        cout<<" in copy weak construct "<<cnt_->w<<endl;
+    }
 
 	SharedPtr<T>& operator=(SharedPtr<T>& sp)
 	{
-		if (_ptr != sp._ptr)
+		if (*this != &sp)
 		{		
-			Release();
-			_ptr = sp._ptr;
-			_refCount = sp._refCount;
-			++(*_refCount);
+			release();
+			ptr_ = sp._ptr;
+			cnt_ = sp.cnt_;
+			cnt_->s++;
 		}
+        cout<<" assign construct "<<cnt_->s<<endl;
 		return *this;
 	}
 
 
 	int Count()
 	{
-		return *(_refCount);
+		return cnt_->s;
 	}
 	T& operator*()
 	{
-		return *_ptr;
+		return *ptr_;
 	}
 
 	T* operator->()
 	{
-		return _ptr;
+		return ptr_;
 	}
 private:
-	T* _ptr;
-	int* _refCount;
+	void release()
+	{
+		if (--(cnt_->s) < 1)
+		{	
+            cout<<" release "<<cnt_->s<<endl;
+			delete ptr_;		
+            if(cnt_->w < 1){
+                delete cnt_;
+                cnt_ = nullptr;
+            }
+		}
+	}
+
+	T* ptr_;
+	Counter* cnt_;
 };
 
 //void TestSharedPtr()
@@ -94,26 +124,89 @@ template <class T>
 class WeakPtr
 {
 public:
+    friend class SharedPtr<T>;
+
 	WeakPtr()
-		:_ptr(NULL)
+		:ptr_(nullptr)
+         ,cnt_(nullptr)
 	{}
 
 	WeakPtr(const SharedPtr<T>& sp)
-		:_ptr(sp._ptr)
-	{}
+		:ptr_(sp.ptr_)
+         ,cnt_(sp.cnt_)
+    {
+        cnt_->w++;
+        cout<<" weak_ptr construct "<<endl;
+    }
+
+    WeakPtr(const WeakPtr<T>& wp)
+        :ptr_(wp.ptr_)
+         ,cnt_(wp.cnt_)
+    {
+        cnt_->w++;
+    }
+
+    ~WeakPtr(){
+        release();
+    }
+
+    WeakPtr<T>& operator=(const WeakPtr<T>& wp){
+        if(*this != &wp){
+            release();
+            ptr_ = wp.ptr_;
+            cnt_ = wp.cnt_;
+            cnt_->w++;
+        }
+        return *this;
+    }
+
+    WeakPtr<T>& operator=(SharedPtr<T>& sp){
+        cout<<" w = s"<<endl;
+        release();
+        cnt_ = sp.cnt_;
+        ptr_ = sp.ptr_;
+        return *this;
+    }
+
+    SharedPtr<T> lock(){
+        return SharedPtr<T>(*this);
+    }
+
+    bool expired(){
+        if(cnt_){
+            if(cnt_->s > 0){
+                cout<<" empty "<<cnt_->s<<endl;
+                return false;
+            }
+        }
+        return true;
+    }
 
 	T& operator*()
 	{
-		return *_ptr;
+		return *ptr_;
 	}
 
 	T* operator->()
 	{
-		return _ptr;
+		return ptr_;
 	}
 
 private:
-	T* _ptr;
+
+    void release(){
+        if(cnt_){
+            cnt_->w--;
+            cout<<" weak_ptr release "<<cnt_->w<<endl;
+            if(cnt_->w < 1 && cnt_->s < 1){
+                delete cnt_;
+                cnt_ = nullptr;
+            }
+        }
+    }
+
+	T* ptr_;
+    Counter* cnt_;
 };
 
 struct ListNode
